@@ -43,7 +43,7 @@ module.exports.Consumer = class {
   }
 };
 
-module.exports.createListener = (mapping, resolve, reject) => {
+module.exports.createListener = (mapping, resolve, reject, verbose) => {
   const PersistentSubscriptionNakEventAction = require('node-eventstore-client/src/persistentSubscriptionNakEventAction');
 
   return (subscription, resolved) => {
@@ -59,7 +59,9 @@ module.exports.createListener = (mapping, resolve, reject) => {
 
     mapping[type](event)
       .then(() => {
-        console.log(`Processed ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
+        if (verbose) {
+          console.log(`Processed ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
+        }
         resolve(subscription, resolved);
       })
       .catch(err => {
