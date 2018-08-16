@@ -1,0 +1,8 @@
+{
+  "name": "casco-event-store",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "node-eventstore-client": "^0.2.3"
+  }
+}
