@@ -1,4 +1,6 @@
-module.exports.Consumer = class {
+import log from "loglevel";
+
+export class Consumer {
   constructor(subscription, eventAppeared, subscriptionDropped = null, bufferSize = 10, autoAck = false) {
     if (!subscriptionDropped) {
       subscriptionDropped = (subscription, reason, error) => {
@@ -43,7 +45,7 @@ module.exports.Consumer = class {
   }
 };
 
-module.exports.createListener = (mapping, resolve, reject) => {
+export function createListener(mapping, resolve, reject) {
   const PersistentSubscriptionNakEventAction = require('node-eventstore-client/src/persistentSubscriptionNakEventAction');
 
   return (subscription, resolved) => {
