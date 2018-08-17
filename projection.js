@@ -1,3 +1,4 @@
+import log from "loglevel";
 import { NoopLogger, ProjectionsManager } from 'node-eventstore-client';
 
 export default class Projection {
@@ -22,7 +23,7 @@ export default class Projection {
         });
 
         if (exists) {
-          return console.log(`Projection ${this.name} already exists`);
+          return log.info(`Projection ${this.name} already exists`);
         }
 
         return manager
@@ -32,8 +33,8 @@ export default class Projection {
             true,
             this.credentials
           )
-          .then(console.log(`Projection ${this.name} created`))
-          ;
+          .then(log.info(`Projection ${this.name} created`))
+        ;
       })
     ;
   }

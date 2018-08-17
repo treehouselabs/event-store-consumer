@@ -1,3 +1,4 @@
+import log from "loglevel";
 import { PersistentSubscriptionSettings, SystemConsumerStrategies } from 'node-eventstore-client';
 
 export default class Subscription {
@@ -22,15 +23,15 @@ export default class Subscription {
         this.settings
       )
       .then(result => {
-        console.log(`Created subscription ${this.stream}/${this.groupName}`);
-        console.log(result);
+        log.info(`Created subscription ${this.stream}/${this.groupName}`);
+        log.info(result);
       })
       .catch(err => {
         if (!err.message.includes('already exists')) {
-          return console.error(err);
+          return log.error(err);
         }
 
-        console.log(`Subscription already exists: ${this.stream}/${this.groupName}`);
+        log.info(`Subscription already exists: ${this.stream}/${this.groupName}`);
       })
     ;
   }

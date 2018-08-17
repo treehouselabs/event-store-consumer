@@ -2,9 +2,9 @@ module.exports.Consumer = class {
   constructor(subscription, eventAppeared, subscriptionDropped = null, bufferSize = 10, autoAck = false) {
     if (!subscriptionDropped) {
       subscriptionDropped = (subscription, reason, error) => {
-        console.error(`Subscription dropped: ${reason}`);
+        log.error(`Subscription dropped: ${reason}`);
         if (error) {
-          console.error(error);
+          log.error(error);
         }
         process.exit(1);
       };
@@ -36,14 +36,14 @@ module.exports.Consumer = class {
         });
       })
       .catch(err => {
-        console.error(`Error connecting to subscription: ${err}`);
+        log.error(`Error connecting to subscription: ${err}`);
         process.exit(1);
       })
     ;
   }
 };
 
-module.exports.createListener = (mapping, resolve, reject, verbose) => {
+module.exports.createListener = (mapping, resolve, reject) => {
   const PersistentSubscriptionNakEventAction = require('node-eventstore-client/src/persistentSubscriptionNakEventAction');
 
   return (subscription, resolved) => {
@@ -52,16 +52,14 @@ module.exports.createListener = (mapping, resolve, reject, verbose) => {
 
     if (!mapping.hasOwnProperty(type)) {
       const err = `Unmapped event type ${type}`;
-      console.warn(err);
+      log.warn(err);
 
       return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Park, err);
     }
 
     mapping[type](event)
       .then(() => {
-        if (verbose) {
-          console.log(`Processed ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
-        }
+        log.debug(`Processed ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
         resolve(subscription, resolved);
       })
       .catch(err => {
