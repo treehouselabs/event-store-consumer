@@ -31,6 +31,7 @@ export class Consumer {
         this.autoAck
       )
       .then(subscription => {
+        log.info(`Consuming from ${this.subscription.stream}/${this.subscription.groupName}`);
         process.on('SIGINT', () => {
           subscription.stop();
           connection.close();
@@ -52,6 +53,8 @@ export function createListener(mapping, resolve, reject) {
     const event = resolved.event;
     const type = event.eventType;
 
+    log.debug(`Processing ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
+
     if (!mapping.hasOwnProperty(type)) {
       const err = `Unmapped event type ${type}`;
       log.warn(err);
@@ -61,7 +64,6 @@ export function createListener(mapping, resolve, reject) {
 
     mapping[type](event)
       .then(() => {
-        log.debug(`Processed ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
         resolve(subscription, resolved);
       })
       .catch(err => {
