@@ -1,9 +1,9 @@
 {
   "name": "casco-event-store",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependencies": {
     "loglevel": "^1.6.1",
-    "node-eventstore-client": "^0.2.3"
+    "node-eventstore-client": "^0.2.4"
   }
 }

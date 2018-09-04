@@ -44,9 +44,9 @@ export class Consumer {
       })
     ;
   }
-};
+}
 
-export function createListener(mapping, resolve, reject) {
+export function createListener(mapping, resolve, reject, skipUnmapped = false) {
   const PersistentSubscriptionNakEventAction = require('node-eventstore-client/src/persistentSubscriptionNakEventAction');
 
   return (subscription, resolved) => {
@@ -56,10 +56,16 @@ export function createListener(mapping, resolve, reject) {
     log.debug(`Processing ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
 
     if (!mapping.hasOwnProperty(type)) {
-      const err = `Unmapped event type ${type}`;
-      log.warn(err);
+      if (skipUnmapped) {
+        log.debug(`Skipping unmapped event type: ${type}`);
 
-      return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Park, err);
+        return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Skip);
+      } else {
+        const err = `Unmapped event type: ${type}`;
+        log.warn(err);
+
+        return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Park, err);
+      }
     }
 
     mapping[type](event)
@@ -71,4 +77,4 @@ export function createListener(mapping, resolve, reject) {
       })
     ;
   };
-};
+}
