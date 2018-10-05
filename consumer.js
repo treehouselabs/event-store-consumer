@@ -56,12 +56,12 @@ export function createListener(mapping, resolve, reject, skipUnmapped = false) {
     log.debug(`Processing ${type} => ${event.eventStreamId}/${event.eventNumber.toNumber()}`);
 
     if (!mapping.hasOwnProperty(type)) {
+      const err = `Unmapped event type: ${type}`;
       if (skipUnmapped) {
         log.debug(`Skipping unmapped event type: ${type}`);
 
-        return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Skip);
+        return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Skip, err);
       } else {
-        const err = `Unmapped event type: ${type}`;
         log.warn(err);
 
         return subscription.fail(resolved, PersistentSubscriptionNakEventAction.Park, err);
