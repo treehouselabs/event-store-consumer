@@ -17,6 +17,7 @@ export class Consumer {
     this.subscriptionDropped = subscriptionDropped;
     this.bufferSize = bufferSize;
     this.autoAck = autoAck;
+    this.persistentSubscription = null;
   }
 
   start(connection) {
