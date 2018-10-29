@@ -1,7 +1,7 @@
 {
   "name": "event-store-consumer",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "dependencies": {
     "loglevel": "^1.6.1",
     "node-eventstore-client": "^0.2.4"

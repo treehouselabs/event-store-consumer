@@ -17,6 +17,7 @@ export class Consumer {
     this.subscriptionDropped = subscriptionDropped;
     this.bufferSize = bufferSize;
     this.autoAck = autoAck;
+    this.persistentSubscription = null;
   }
 
   start(connection) {
@@ -31,6 +32,8 @@ export class Consumer {
         this.autoAck
       )
       .then(subscription => {
+        this.persistentSubscription = subscription;
+
         log.info(`Consuming from ${this.subscription.stream}/${this.subscription.groupName}`);
         process.on('SIGINT', () => {
           subscription.stop();
@@ -43,6 +46,12 @@ export class Consumer {
         process.exit(1);
       })
     ;
+  }
+
+  cancel() {
+    if (this.persistentSubscription) {
+      this.persistentSubscription.stop();
+    }
   }
 }
 
