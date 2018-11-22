@@ -1,7 +1,7 @@
 import log from "loglevel";
 
 export class Consumer {
-  constructor(subscription, eventAppeared, subscriptionDropped = null, bufferSize = 10, autoAck = false) {
+  constructor(subscription, eventAppeared, subscriptionDropped = null, bufferSize = 1, autoAck = false) {
     if (!subscriptionDropped) {
       subscriptionDropped = (subscription, reason, error) => {
         log.error(`Subscription dropped: ${reason}`);
