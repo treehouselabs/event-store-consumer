@@ -5,10 +5,9 @@ export class Consumer {
     if (!subscriptionDropped) {
       subscriptionDropped = (subscription, reason, error) => {
         log.error(`Subscription dropped: ${reason}`);
-        if (error) {
+        if (error && reason !== 'connectionClosed') {
           log.error(error);
         }
-        process.exit(1);
       };
     }
 
@@ -33,13 +32,7 @@ export class Consumer {
       )
       .then(subscription => {
         this.persistentSubscription = subscription;
-
         log.info(`Consuming from ${this.subscription.stream}/${this.subscription.groupName}`);
-        process.on('SIGINT', () => {
-          subscription.stop();
-          connection.close();
-          process.exit(0);
-        });
       })
       .catch(err => {
         log.error(`Error connecting to subscription: ${err}`);
